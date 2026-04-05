@@ -1,0 +1,28 @@
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+# Dummy genre finder function
+def find_genre(game_name):
+    game_name = game_name.lower()
+    if "call of duty" in game_name or "battlefield" in game_name:
+        return "Shooter"
+    elif "fifa" in game_name or "nba" in game_name:
+        return "Sports"
+    elif "dark souls" in game_name or "elden ring" in game_name:
+        return "RPG"
+    elif "need for speed" in game_name or "forza" in game_name:
+        return "Racing"
+    else:
+        return "Unknown / Mixed Genre"
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        game_name = request.form["game_name"]
+        genre = find_genre(game_name)
+        return render_template("result.html", game_name=game_name, genre=genre)
+    return render_template("index.html")
+
+if __name__ == "__main__":
+    app.run(debug=True)
